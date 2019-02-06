@@ -48,7 +48,8 @@ WorldCities %>% ggplot(aes(x = population)) +
   geom_histogram() +
   xlab('Region Population') +
   ylab('Total count') +
-  theme_bw(base_size = 15)
+  ggtitle('population count') +
+  theme_bw()
 ```
 
  
