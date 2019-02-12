@@ -1,0 +1,183 @@
+---
+title: "homework_2_Fan_Chisun"
+author: "Chisun  Fan"
+date: "February 12, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+ 
+
+
+#3.2.4 Exercises
+
+###Run ggplot(data = mpg). What do you see?
+
+**A blank plots window showed up.**
+
+###How many rows are in mpg? How many columns?
+
+**There are 234 rows and 11 columns**
+
+###What does the drv variable describe? Read the help for ?mpg to find out.
+
+**The drv variable specifies the drivetrain of the car.**
+
+
+###Make a scatterplot of hwy vs cyl.
+
+
+
+
+```{r }
+library(tidyverse)
+library(mdsr)
+```
+
+
+
+```{r }
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = cyl, y = hwy))
+```
+
+
+###What happens if you make a scatterplot of class vs drv? Why is the plot not useful?
+```{r}
+ggplot(data = mpg) + 
+ geom_point(mapping = aes(x = class, y = drv))
+```
+
+**The plot is not useful because no quantitative information can be displayed.**
+
+#Section 3.3.1: all exercises
+
+###What’s gone wrong with this code? Why are the points not blue?
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+  
+  
+**To make all the points blue, color needs to be an argument of geom_point, not an aesthetic as in the current code.** 
+
+### Which variables in mpg are categorical? Which variables are continuous? (Hint: type ?mpg to read the documentation for the dataset). How can you see this information when you run mpg?
+
+
+**Categorical: manufacturer, model, trans, drv, fl, and class**
+ 
+**Continuous: displ, year,  cyl, cty, hwy**
+
+###Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
+
+**Using color: categorical mapped each category to different color. Continuous mapped to same color with differet transparency.**
+**Using size : categorical come up with warning as not suggested. Continuous map size to the variable number.**
+**Using shape : categorical maps each category to different shapes. continuous comes up with error as it can not be mapped to shape.**
+
+
+
+###What happens if you map the same variable to multiple aesthetics?
+
+**It appears to plot just fine. For example if I assign both y axis and size to hwy, it will plot large dots at higher y value, which shows redundent information.**
+
+
+
+###What does the stroke aesthetic do? What shapes does it work with? (Hint: use ?geom_point)
+
+**The stroke aesthetic gives the width of the border. It only works with shape 21, 22, 23, and 24.**
+
+###What happens if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5)? Note, you’ll also need to specify x and y.
+
+**The aesthetic will be based on the logic value of the evaluation rather than the value of the variable.**
+
+#Section 3.5.1:  #4 and #5 only
+
+###Take the first faceted plot in this section:
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
+###What are the advantages to using faceting instead of the colour aesthetic? What are the disadvantages? How might the balance change if you had a larger dataset?
+
+**It's more clear using faceting if the focus is on each value of an variable. but if the focus is on comparing differnt values of a variable or overall observation,  then color aesthetic will be a better choice. If the dataset is larger their maybe a lot of overlay and color aesthetic may not communicate the real information. Faceting will be become a better choice at that point.**
+
+
+###Read ?facet_wrap. What does nrow do? What does ncol do? What other options control the layout of the individual panels? Why doesn’t facet_grid() have nrow and ncol arguments?
+
+**nrow gives number of rows. ncol gives number of columns. when both present, it will satisfy ncol first and may not reach the number of rows specified.**
+
+**as.table, and dir options control the layout of the individual panels**
+
+**facet_grid does not have nrow and ncol because row and column are already defined by "~".**
+
+
+#3.6.1 Exercises
+
+###What geom would you use to draw a line chart? A boxplot? A histogram? An area chart?
+
+**geom_line, geom_boxplot, geom_histogram, and geom_area**
+
+###Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions.
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+  
+**Ran and showed as predicted.**
+
+###What does show.legend = FALSE do? What happens if you remove it?
+
+**No difference if removed in this situation. Because there is no legend pecified to the group. If there was a legend specified it will appear somewhere on the plot. **
+
+### Why do you think I used it earlier in the chapter?
+
+**Just in case to make sure no legend output on the plot.**
+
+###What does the se argument to geom_smooth() do?
+
+**Plot the confidence level, which is the shaded area on the plot.**
+
+###Will these two graphs look different? Why/why not?
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth()
+
+ggplot() + 
+  geom_point(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_smooth(data = mpg, mapping = aes(x = displ, y = hwy))
+  
+**The two plots should look identical. But the second code section needs to load mpg data twice.**
+  
+###Recreate the R code necessary to generate the following graphs.
+
+**1: ggplot(data=mpg, mapping=aes(x=displ, y=hwy))+geom_point()+geom_smooth()**
+
+**2: ggplot()+geom_point(data=mpg, mapping=aes(x=displ, y=hwy))+geom_smooth(data=mpg,mapping=aes(x=displ, y=hwy,group=drv), se=FALSE)**
+
+**3: ggplot()+geom_point(data=mpg, mapping=aes(x=displ, y=hwy,color=drv))+geom_smooth(data=mpg,mapping=aes(x=displ, y=hwy,group=drv), se=FALSE)**
+
+**4: ggplot()+geom_point(data=mpg, mapping=aes(x=displ, y=hwy,color=drv))+geom_smooth(data=mpg,mapping=aes(x=displ, y=hwy), se=FALSE)**
+
+**5: ggplot()+geom_point(data=mpg, mapping=aes(x=displ, y=hwy,color=drv))+geom_smooth(data=mpg,mapping=aes(x=displ, y=hwy,linetype=drv), se=FALSE)**
+
+**6: ggplot()+geom_point(data=mpg, mapping=aes(x=displ, y=hwy,color=drv))**
+
+
+
+#Section 3.7.1
+
+###What does geom_col() do? How is it different to geom_bar()?
+
+**They both generate bar charts. geom_bar makes the height of the bar based on the number of cases, no y aesthetic need to specified. geom_col leaves the data as is. y aesthetic need to be specified.**
+
+
+#Look at the data graphics at the following link: What is a Data Scientist. Please briefly critique the designer’s choices. What works? What doesn’t work? What would you have done differently?
+
+
+**The pie chart and bar chart works as intended, numbers with faded transparency marginally works. individual panels comparing DS and BI do not work. I would choose a consolidated bar chart to represent these information.**
+
+
+ 
