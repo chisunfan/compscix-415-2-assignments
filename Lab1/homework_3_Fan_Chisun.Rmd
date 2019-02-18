@@ -1,0 +1,167 @@
+---
+title: "homework_3_Fan_Chisun"
+author: "Chisun  Fan"
+date: "February 15, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+##3.8.1 Exercises
+
+*1.What is the problem with this plot? How could you improve it?*
+
+*ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +*
+*geom_point()*
+  
+###Points are overlapped and not showing the complete data. Replace geom_point with geom_gitter will fix the overlapping issue and show every instance of the data set.  
+
+
+*2.What parameters to geom_jitter() control the amount of jittering?*
+
+
+###width and height
+
+
+*3. Compare and contrast geom_jitter() with geom_count().*
+
+```{r}
+library(tidyverse)
+ggplot(data=mpg, mapping=aes(x=cty, y=hwy))+geom_count()
+```
+
+
+```{r}
+ggplot(data=mpg, mapping=aes(x=cty, y=hwy))+geom_jitter()
+```
+
+###geom_jitter shows overlapping data by jittering while geom_count shows overlapping data by the size of the point.
+
+*4.What’s the default position adjustment for geom_boxplot()? Create a visualisation of the mpg dataset that demonstrates it.*
+
+###The default is "dodge2"
+
+```{r}
+ggplot(data=mpg, mapping=aes(x=drv, y=hwy, fill=class))+geom_boxplot(position="identity")
+```
+
+```{r}
+ggplot(data=mpg, mapping=aes(x=drv, y=hwy, fill=class))+geom_boxplot()
+```
+
+##3.9.1 Exercises
+
+*2.What does labs() do? Read the documentation.*
+
+###The labs() function interpret the graphic information using labels, titles, and other text so that the audience can understand the plot better.
+
+*4.What does the plot below tell you about the relationship between city and highway mpg? Why is coord_fixed() important? What does geom_abline() do?*
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline() +
+  coord_fixed()
+```
+
+###The plot shows a linear relation between city and highway mpg. coord_fixed ensure the ratio is 1 for both x and y  scales since city and highway mpg are using same unit. geom_abline plot a reference line with intercept and slope based on the data. 
+
+##4.4 Practice
+
+*1.Why does this code not work?*
+
+*my_variable <- 10*
+
+*my_varıable*
+
+*> Error in eval(expr, envir, enclos): object 'my_varıable' not found*
+
+*Look carefully! (This may seem like an exercise in pointlessness, but training your brain to notice even the tiniest difference will pay off when programming.)*
+
+###Don't know. code executed just fine in my console sub-window.
+
+```{r}
+my_variable <- 10
+my_variable
+```
+
+*2.Tweak each of the following R commands so that they run correctly:*
+
+library(tidyverse)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+fliter(mpg, cyl = 8)
+filter(diamond, carat > 3)
+
+###first two does not have issues running. 
+###filter(mpg, cyl== 8)
+###filter(diamonds, carat > 3)
+
+##5.2.4 Exercises
+*1.Find all flights that*
+
+*1.Had an arrival delay of two or more hours*
+
+### filter(flights, dep_delay >=120)
+
+*2.Flew to Houston (IAH or HOU)*
+
+###filter(flights, dest == "IAH" | dest == "HOU")
+
+*3.Were operated by United, American, or Delta*
+
+###filter(flights, carrier == "UA" | carrier == "AA" | carrier == "DL")
+
+*4.Departed in summer (July, August, and September)*
+
+###filter(flights, month ==7 | month == 8 | month == 9)
+
+*5.Arrived more than two hours late, but didn’t leave late*
+
+###filter(flights, (arr_delay > 120) & (dep_delay <= 0))
+
+*6.Were delayed by at least an hour, but made up over 30 minutes in flight*
+
+###filter(flights, (dep_delay >= 60) & (arr_time - sched_arr_time < 30))
+
+*7.Departed between midnight and 6am (inclusive)*
+
+###filter(flights, dep_time >= 0 & dep_time <=360)
+
+
+*3.How many flights have a missing dep_time? What other variables are missing? What might these rows represent?*
+
+###8255 flights have a missing dep_time. For those flights the dep_delay and arr_time are also missing. I would interpret them as cancelled flight since they do have sched_dep_time.
+
+*4.Why is NA ^ 0 not missing? Why is NA | TRUE not missing? Why is FALSE & NA not missing? Can you figure out the general rule? (NA \* 0 is a tricky counterexample!)*
+
+###anything to the power of 0 is always 1.
+###anything or with a TRUE  is always TRUE.
+###anything and with a FALSE  is always FALSE
+###NA \* 0 is NA. On Quora the explanation is NaN*0=NaN where NaN stands for "Not a numerical value".
+
+##5.4.1 Exercises
+*1.Brainstorm as many ways as possible to select dep_time, dep_delay, arr_time, and arr_delay from flights.*
+
+###select(flights, starts_with("dep"), starts_with("arr"))
+
+###select(flights,dep_time,dep_delay,arr_time,arr_delay)
+
+###vars <- ("dep_time","dep_delay","arr_time","arr_delay") 
+###select(flights,vars)
+
+
+*3.What does the one_of() function do? Why might it be helpful in conjunction with this vector?*
+
+*vars <- c("year", "month", "day", "dep_delay", "arr_delay")*
+
+###one_of matches name against any string in the vector. It is helpful because it is more intepretive using the function. In reality thers is no difference with or without it.
+
+###select(flights, vars) output the same result as select(flights, one_of(vars))
+
+ 
