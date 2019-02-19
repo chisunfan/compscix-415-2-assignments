@@ -28,13 +28,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *3. Compare and contrast geom_jitter() with geom_count().*
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 library(tidyverse)
 ggplot(data=mpg, mapping=aes(x=cty, y=hwy))+geom_count()
 ```
 
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 ggplot(data=mpg, mapping=aes(x=cty, y=hwy))+geom_jitter()
 ```
 
@@ -44,11 +44,11 @@ ggplot(data=mpg, mapping=aes(x=cty, y=hwy))+geom_jitter()
 
 ###The default is "dodge2"
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 ggplot(data=mpg, mapping=aes(x=drv, y=hwy, fill=class))+geom_boxplot(position="identity")
 ```
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 ggplot(data=mpg, mapping=aes(x=drv, y=hwy, fill=class))+geom_boxplot()
 ```
 
@@ -60,7 +60,7 @@ ggplot(data=mpg, mapping=aes(x=drv, y=hwy, fill=class))+geom_boxplot()
 
 *4.What does the plot below tell you about the relationship between city and highway mpg? Why is coord_fixed() important? What does geom_abline() do?*
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_point() + 
   geom_abline() +
@@ -83,7 +83,7 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 ###Don't know. code executed just fine in my console sub-window.
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 my_variable <- 10
 my_variable
 ```
@@ -96,6 +96,7 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy))
 
 fliter(mpg, cyl = 8)
+
 filter(diamond, carat > 3)
 
 ###first two does not have issues running. 
@@ -107,31 +108,47 @@ filter(diamond, carat > 3)
 
 *1.Had an arrival delay of two or more hours*
 
-### filter(flights, dep_delay >=120)
+```{r,warning=FALSE,message=FALSE}
+library(nycflights13)
+filter(flights, dep_delay >=120)
+```
 
 *2.Flew to Houston (IAH or HOU)*
 
-###filter(flights, dest == "IAH" | dest == "HOU")
+```{r,warning=FALSE,message=FALSE}
+filter(flights, dest == "IAH" | dest == "HOU")
+```
 
 *3.Were operated by United, American, or Delta*
 
-###filter(flights, carrier == "UA" | carrier == "AA" | carrier == "DL")
+```{r,warning=FALSE,message=FALSE}
+filter(flights, carrier == "UA" | carrier == "AA" | carrier == "DL")
+```
 
 *4.Departed in summer (July, August, and September)*
 
-###filter(flights, month ==7 | month == 8 | month == 9)
+```{r,warning=FALSE,message=FALSE}
+filter(flights, month ==7 | month == 8 | month == 9)
+```
 
 *5.Arrived more than two hours late, but didn’t leave late*
 
-###filter(flights, (arr_delay > 120) & (dep_delay <= 0))
+```{r,warning=FALSE,message=FALSE}
+filter(flights, (arr_delay > 120) & (dep_delay <= 0))
+```
 
 *6.Were delayed by at least an hour, but made up over 30 minutes in flight*
 
-###filter(flights, (dep_delay >= 60) & (arr_time - sched_arr_time < 30))
+```{r,warning=FALSE,message=FALSE}
+filter(flights, (dep_delay >= 60) & (arr_time - sched_arr_time < 30))
+```
+
 
 *7.Departed between midnight and 6am (inclusive)*
 
-###filter(flights, dep_time >= 0 & dep_time <=360)
+```{r,warning=FALSE,message=FALSE}
+filter(flights, dep_time >= 0 & dep_time <=360)
+```
 
 
 *3.How many flights have a missing dep_time? What other variables are missing? What might these rows represent?*
@@ -148,12 +165,14 @@ filter(diamond, carat > 3)
 ##5.4.1 Exercises
 *1.Brainstorm as many ways as possible to select dep_time, dep_delay, arr_time, and arr_delay from flights.*
 
-###select(flights, starts_with("dep"), starts_with("arr"))
+```{r,warning=FALSE,message=FALSE}
+select(flights, starts_with("dep"), starts_with("arr"))
 
-###select(flights,dep_time,dep_delay,arr_time,arr_delay)
+select(flights,dep_time,dep_delay,arr_time,arr_delay)
 
-###vars <- ("dep_time","dep_delay","arr_time","arr_delay") 
-###select(flights,vars)
+vars <- c("dep_time","dep_delay","arr_time","arr_delay") 
+select(flights,vars)
+```
 
 
 *3.What does the one_of() function do? Why might it be helpful in conjunction with this vector?*
