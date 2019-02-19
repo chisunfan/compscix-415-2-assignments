@@ -160,7 +160,7 @@ filter(diamond, carat > 3)
 
 *vars <- c("year", "month", "day", "dep_delay", "arr_delay")*
 
-###one_of matches name against any string in the vector. It is helpful because it is more intepretive using the function. In reality thers is no difference with or without it.
+###one_of matches name against any string in the vector. It is helpful because it is more interpretive using the function. In reality there is no difference with or without it.
 
 ###select(flights, vars) output the same result as select(flights, one_of(vars))
 
