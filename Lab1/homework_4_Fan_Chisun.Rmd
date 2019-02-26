@@ -1,0 +1,214 @@
+---
+title: "COMPSCIX 415.2 Homework 4"
+author: "Chisun  Fan"
+date: "February 21, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(nycflights13)
+library(tidyverse)
+```
+
+##5.6.7 Exercises##
+
+*2. Come up with another approach that will give you the same output as not_cancelled %>% count(dest) and not_cancelled %>% count(tailnum, wt = distance) (without using count()).*
+
+```{r, warning=FALSE, message=FALSE}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+not_cancelled %>% group_by(dest) %>% summarise(n())
+
+not_cancelled %>% group_by(tailnum) %>% summarise(distance=sum(distance))
+```
+
+*4.Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?*
+
+```{r, warning=FALSE,message=FALSE}
+delay_vs_cancelled <- flights %>% group_by(year,month,day) %>% summarise(count=n(),avg_delay=mean(arr_delay,na.rm = TRUE), cancelled=sum(is.na(arr_delay)))
+ggplot(delay_vs_cancelled,mapping=aes(x=avg_delay, y=cancelled))+geom_point()+geom_smooth()
+```
+
+**Yes number of cancelled flight rises when average delay increases.**
+
+
+*5.Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))*
+
+```{r, warning=FALSE,message=FALSE}
+delay_carrier_dest <- flights %>% group_by(carrier, dest) %>% summarise(avg_delay=mean(arr_delay,na.rm=TRUE)) %>% filter(avg_delay > 15) 
+ggplot(data=delay_carrier_dest)+geom_point(mapping=aes(x=carrier,y=avg_delay,color=dest))
+```
+
+**UA and OO experiencing bad delay but only for specific airports. It maybe due to other carrier simply does not go to those airports.**
+ 
+**EV is the carrier with the worst delay**
+
+*6.What does the sort argument to count() do. When might you use it?*
+
+**If sort = TRUE it will sort output in descending order. it will be useful if you want to find out the highest or the lowest count.**
+
+
+##10.5 Exercises##
+*1. How can you tell if an object is a tibble? (Hint: try printing mtcars, which is a regular data frame).*
+
+**If you print a tibble, it always starts with "it's a tibble"**
+
+*2. Compare and contrast the following operations on a data.frame and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?*
+
+```{r,warning=FALSE, message=FALSE}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+```
+**no error since data.frame will match string without exact match.**
+```{r,warning=FALSE, message=FALSE}
+df <- tibble(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+```
+
+
+**df$x produce error for tibble since tibble does not do partial match.**
+
+*3. If you have the name of a variable stored in an object, e.g. var <- "mpg", how can you extract the reference variable from a tibble?*
+
+**need to use [[]] function.  tibble[[var]] will extract whatever column name var is having.**
+```{r,warning=FALSE, message=FALSE}
+df <- tibble(abc="1", xyz="a")
+var <- "abc"
+df[[var]]
+```
+
+*6.What option controls how many additional column names are printed at the footer of a tibble?*
+```{r,warning=FALSE, message=FALSE}
+flights %>% print(n_extra=3)
+```
+**using the print function. n_extra specify number of extra columns to print in abbreviated information.**
+
+
+##12.3.3 Exercises##
+*2.Why does this code fail?*
+
+*table4a %>% *
+*gather(1999, 2000, key = "year", value = "cases")*
+*#> Error in inds_combine(.vars, ind_list): Position must be between 0 and n*
+
+**1999 and 2000 need to be quoted**
+
+*3.Why does spreading this tibble fail? How could you add a new column to fix the problem?*
+
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+
+**It failed because there can be multiple persons with identical name. I would add a column called index if duplicate name occurs**
+
+```{r,warning=FALSE, message=FALSE}
+people <- tribble(
+  ~name,     ~index,        ~key,    ~value,
+  #-----------------|---|--------|------
+  "Phillip Woods",   1,  "age",       45,
+  "Phillip Woods",   1,  "height",   186,
+  "Phillip Woods",   2,  "age",       50,
+  "Jessica Cordero", 1,  "age",       37,
+  "Jessica Cordero", 1,  "height",   156
+)
+people %>% spread(key=key, value=value)
+```
+
+
+
+
+
+*4.Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?*
+
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+
+**Need gather to tidy the tibble. The variables are pregnant, gender, and count**
+
+```{r,warning=FALSE, message=FALSE}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+gather(preg,"male","female",k="gender", value = "count")
+```
+
+##12.4.3 Exercises##
+
+*1.What do the extra and fill arguments do in separate()? Experiment with the various options for the following two toy datasets.*
+
+```{r,warning=FALSE, message=FALSE}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"))
+
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"))
+  
+   tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% separate(x, c("one", "two", "three"),extra="merge")
+  
+  tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% separate(x, c("one", "two", "three"),extra="drop")
+  
+  tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% separate(x, c("one", "two", "three"),extra="warn")
+  tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"))
+  
+  tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"),drop=right)
+  
+  tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"),drop=left)
+  
+```  
+ **extra and fill perform as what they literally means.**
+ 
+ 
+ 
+  
+*2.Both unite() and separate() have a remove argument. What does it do? Why would you set it to FALSE?*
+
+**The default for remove is  TRUE, which removes original column separated or united from output. you set it to FALSE if you want to keep the original column in output for comparison or varification.**
+
+##Follow these steps:##
+
+*- Download the baby_names.txt file from Canvas which is in the Homework 4 assignment section.*
+*- Load this file into R correctly and take a glimpse of the output.*
+*- Export this file as a csv file and call it ‘baby_names.csv’.*
+*- Reload the baby_names.csv file and take another glimpse.*
+*- Show all of your code and the output. There should be two data import lines of code, one data export line of code, and two glimpses of the data.*
+
+```{r,warning=FALSE, message=FALSE}
+
+file_path <- 'c:/users/chisun/downloads/baby_names.txt'
+csv_data <- read_delim(file_path, delim = "|" )
+csv_data
+out_file_path <- "C:/users/chisun/downloads/baby_names.csv"
+write_csv(csv_data,out_file_path)
+new_csv_data=read_csv(out_file_path)
+new_csv_data
+```
+
+
+
+
+
+## R Markdown
+
+ 
