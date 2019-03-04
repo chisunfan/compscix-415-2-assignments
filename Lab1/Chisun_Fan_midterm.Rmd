@@ -63,7 +63,7 @@ Importing/exporting data -
 ###Fix this code with the fewest number of changes possible so it works:
 My_data.name___is.too00ooLong! <- c( 1 , 2   , 3 )
 
-*** 
+***
 
 **My_data.name___is.too00ooLong <- c( 1 , 2   , 3 )**
  
@@ -81,7 +81,7 @@ my_vector
 
 ***
 
-**R automaticall convert element in a vector to the same type when mixed types are specified. In this case it converts numeric to character type since '3' and '4' are specified character type.**
+**R automatically converts element in a vector to the same type when mixed types are specified. In this case it converts numeric to character type since '3' and '4' are specified character type.**
 
 ##Data import/export (3 points)
 
@@ -111,11 +111,11 @@ Critique this graphic: give only three examples of what is wrong with this graph
 ![](image/president.jpg)
 ***
 
-**1.mixing two categories, gender and age group, into one comparison is not good practice.**
+**1.Mixing two categories, gender and age group, into one comparison is not good practice.**
 
-**2.size of circles is not as clear as bar charts for comparison**
+**2.Size of circles is not as clear as bar charts for comparison**
 
-**3.the fill color or transparency of circles does not have any clear meanings.**
+**3.The fill color or transparency of circles does not have any clear meanings.**
 
 ###Reproduce this graphic using the diamonds data set.
 
