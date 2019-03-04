@@ -7,13 +7,14 @@ output:
        toc: yes
        number_section: true
 ---
+[This is the hyperlink for exercise1.8 GitHub link](https://github.com/chisunfan/compscix-415-2-assignments/blob/master/Lab1/Chisun_Fan_midterm.html)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
- 
+
 
 #Exercises(Total Points - 30)
 
@@ -27,7 +28,7 @@ By now you've used at least five different packages from the tidyverse for plott
 
 Plotting -  
 Data munging/wrangling -  
-Reshaping (speading and gathering) data - 
+Reshaping (spreading and gathering) data - 
 Importing/exporting data - 
 
 ***
@@ -36,7 +37,7 @@ Importing/exporting data -
 
 **Data munging/wrangling -  dplyr**
 
-**Reshaping (speading and gathering) data - tidyr**
+**Reshaping (spreading and gathering) data - tidyr**
 
 **Importing/exporting data - readr**
 
