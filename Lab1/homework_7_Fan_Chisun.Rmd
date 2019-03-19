@@ -1,0 +1,197 @@
+---
+title: "COMPSCIX 415.2 Homework 7"
+author: "Chisun  Fan"
+date: "March 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+COMPSCIX 415.2 Homework 7
+Robert Clements
+In this assignment…
+…we will work with linear models.
+
+ 
+
+Go to the House Prices prediction competition on Kaggle here: https://www.kaggle.com/c/house-prices-advanced-regression-techniques
+
+Read the Overview Description, Evaluation, and the Data sections.
+
+Download the train.csv and data_description.txt files either from the Kaggle website, or from Canvas (in the homework section). You do not need to download the test.csv file. To download from Kaggle you will probably have to sign up for an account, so I leave that decision up to you.
+
+Skim through the data_description.txt file. There is a lot of stuff here, but don’t feel the need to read it all.
+
+Next, download the broom package.
+
+Answer these questions:
+
+##Exercise 1
+Load the train.csv dataset into R. How many observations and columns are there?
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+File_path <- "C:/users/chisun/downloads/train.csv"
+train_csv <- read_delim(File_path,',')
+glimpse(train_csv)
+```
+
+**1460 observations and 81 variables.**
+
+
+##Exercise 2
+Normally at this point you would spend a few days on EDA, but for this homework we will do some very basic EDA and get right to fitting some linear regression models.
+
+Our target will be SalePrice.
+
+Visualize the distribution of SalePrice.
+Visualize the covariation between SalePrice and Neighborhood.
+Visualize the covariation between SalePrice and OverallQual.
+```{r,warning=FALSE,message=FALSE}
+ 
+train_csv %>% ggplot(mapping=aes(x=SalePrice))+geom_histogram()
+train_csv %>% ggplot(mapping=aes(x=Neighborhood,y=SalePrice))+geom_boxplot()+coord_flip()
+train_csv %>% ggplot(mapping=aes(x=as.character(OverallQual),y=SalePrice))+geom_boxplot()+coord_flip()
+ 
+```
+
+
+
+
+##Exercise 3
+Our target is called SalePrice. First, we can fit a simple regression model consisting of only the intercept (the average of SalePrice). Fit the model and then use the broom package to
+
+take a look at the coefficient,
+compare the coefficient to the average value of SalePrice, and
+take a look at the R-squared.
+```{r,warning=FALSE,message=FALSE}
+library(broom)
+fit <- lm(SalePrice ~ 1, data = train_csv)
+summary(fit)
+tidy(fit)
+glance(fit)
+```
+
+##Exercise 4
+Now fit a linear regression model using GrLivArea, OverallQual, and Neighborhood as the features. Don’t forget to look at  data_description.txt to understand what these variables mean. Ask yourself these questions before fitting the model:
+
+What kind of relationship will these features have with our target?
+
+**GrLivArea : The bigger this variable, the higher the SalePrice.**
+**OverallQual : The higher this number, the higher the SalePrice.**
+**Neighborhood : Each neighborhood will have different coefficient for GrlivArea and OverallQual due to location difference.**
+
+
+Can the relationship be estimated linearly?
+
+**Yes.**
+
+Are these good features, given the problem we are trying to solve?
+
+**Yes**
+
+
+After fitting the model, output the coefficients and the R-squared using the broom package.
+```{r,warning=FALSE,message=FALSE}
+ fit <- lm(SalePrice ~ GrLivArea+OverallQual+Neighborhood, data = train_csv)
+summary(fit)
+tidy(fit)
+glance(fit)
+```
+
+Answer these questions:
+
+How would you interpret the coefficients on GrLivArea and OverallQual?
+
+**$55.6 per square feet of living area**
+**$20951 more per quality grade difference**
+
+How would you interpret the coefficient on NeighborhoodBrkSide?
+
+**Brkside mean value is $13025 less than total mean value**
+
+Are the features significant?
+
+**Yes the GrLivArea and OverallQual are significant because the p value is extremely small**
+
+Are the features practically significant?
+
+**Yes. Size and quality does matter.**
+
+Is the model a good fit?
+
+**Yes it's a good fit.**
+
+##Exercise 5 (OPTIONAL - won’t be graded)
+Feel free to play around with linear regression. Add some other features and see how the model results change.
+
+##Exercise 6
+One downside of the linear model is that it is sensitive to unusual values because the distance incorporates a squared term. Fit a linear model to the simulated data below (use y as the target and x as the feature), and look at the resulting coefficients and R-squared. Rerun it about 5-6 times to generate different simulated datasets. What do you notice about the model’s coefficient on x and the R-squared values?
+
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2)
+)
+
+```{r,warning=FALSE,message=FALSE,echo=TRUE}
+ 
+  
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2 )
+ )
+fit <- lm(formula=y~x,data=sim1a)
+tidy(fit)
+glance(fit)
+
+ sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2 )
+ )
+fit <- lm(formula=y~x,data=sim1a)
+tidy(fit)
+glance(fit)
+
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2 )
+ )
+fit <- lm(formula=y~x,data=sim1a)
+tidy(fit)
+glance(fit)
+
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2 )
+ )
+fit <- lm(formula=y~x,data=sim1a)
+tidy(fit)
+glance(fit)
+
+
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2 )
+ )
+fit <- lm(formula=y~x,data=sim1a)
+tidy(fit)
+glance(fit)
+
+
+
+```
+
+***
+
+**when coefficient is close to 1.5, we have high R-square.**
+
+
+
+
+
+
+
+ 
