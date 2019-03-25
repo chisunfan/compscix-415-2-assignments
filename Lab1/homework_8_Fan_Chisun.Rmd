@@ -1,0 +1,46 @@
+---
+title: "COMPSCIX 415.2 Homeword 8"
+author: "Chisun  Fan"
+date: "March 25, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+library(tidyverse)  
+library(leaflet)
+library(htmltools)
+library(shiny)
+library(rvest)
+library(jsonlite)
+
+ 
+```
+ 
+
+```{r,warning=FALSE,message=FALSE}
+
+map_it <-  function(contract_name) {
+url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",contract_name,"&apiKey=7b30ef3af56d384f4315a518890c62f1b96cdc9d")
+df_api <- fromJSON(url,flatten = TRUE)
+bike_stands <- df_api %>% select(available_bikes,position.lat,position.lng) %>% mutate(logitude=position.lng,lattitude=position.lat)
+leaflet() %>% addTiles() %>% addMarkers(lng = ~logitude, lat = ~lattitude, data=bike_stands,label = ~htmlEscape(as.character(available_bikes)))
+}
+
+map_it('Dublin')
+
+map_it('Luxembourg')
+
+map_it("Seville")
+```
+
+**Tried using selectInput for interactive city selection but was never able to get it to work.**
+
+s <- selectInput("city", "City Name",  choices = c('Luxembourg','Dublin','Brisbane','Seville','Stockholm','Ljubljana')) 
+ 
+
+ 
